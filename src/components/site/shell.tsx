@@ -57,7 +57,7 @@ function Nav({ scrolled }: { scrolled: boolean }) {
             className="hidden md:inline-flex items-center gap-1.5 rounded-full bg-clay px-4 py-2 text-sm font-semibold text-primary-foreground shadow-soft transition hover:opacity-90"
           >
             Zaproś nas <ArrowRight className="h-4 w-4" />
-          </a>
+          </Link>
           <button
             type="button"
             aria-label={open ? "Zamknij menu" : "Otwórz menu"}
@@ -90,7 +90,7 @@ function Nav({ scrolled }: { scrolled: boolean }) {
                 className="flex items-center justify-center gap-2 rounded-full bg-clay px-5 py-3 text-sm font-semibold text-primary-foreground"
               >
                 Zaproś nas <ArrowRight className="h-4 w-4" />
-              </a>
+              </Link>
             </li>
           </ul>
         </div>
