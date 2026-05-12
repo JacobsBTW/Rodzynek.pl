@@ -53,11 +53,11 @@ function Nav({ scrolled }: { scrolled: boolean }) {
         </ul>
         <div className="flex items-center gap-2">
           <Link
-            to="/kontakt"
+            href="/#kontakt"
             className="hidden md:inline-flex items-center gap-1.5 rounded-full bg-clay px-4 py-2 text-sm font-semibold text-primary-foreground shadow-soft transition hover:opacity-90"
           >
             Zaproś nas <ArrowRight className="h-4 w-4" />
-          </Link>
+          </a>
           <button
             type="button"
             aria-label={open ? "Zamknij menu" : "Otwórz menu"}
@@ -85,12 +85,12 @@ function Nav({ scrolled }: { scrolled: boolean }) {
             ))}
             <li className="mt-2">
               <Link
-                to="/kontakt"
+                href="/#kontakt"
                 onClick={() => setOpen(false)}
                 className="flex items-center justify-center gap-2 rounded-full bg-clay px-5 py-3 text-sm font-semibold text-primary-foreground"
               >
                 Zaproś nas <ArrowRight className="h-4 w-4" />
-              </Link>
+              </a>
             </li>
           </ul>
         </div>
@@ -112,7 +112,7 @@ function Footer() {
               <a href={l.href} className="transition hover:text-warm">{l.label}</a>
             </li>
           ))}
-          <li><Link to="/kontakt" className="transition hover:text-warm">Kontakt</Link></li>
+          <li><a href="/#kontakt" className="transition hover:text-warm">Kontakt</a></li>
         </ul>
         <span className="text-xs text-warm/45">© 2025 Rodzynek.pl · CLARA / Yourope · UŁ</span>
       </div>

@@ -18,7 +18,7 @@ function HomePage() {
       <div id="warsztaty"><Workshops /></div>
       <div id="projekt"><Projekt /></div>
       <div id="zespol"><Team /></div>
-      <Contact />
+      <div id="kontakt"><Contact /></div>
     </SiteShell>
   );
 }
