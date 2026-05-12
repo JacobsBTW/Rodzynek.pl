@@ -14,10 +14,10 @@ function HomePage() {
     <SiteShell>
       <Hero />
       <Marquee />
-      <About />
-      <Workshops />
-      <Projekt />
-      <Team />
+      <div id="o-nas"><About /></div>
+      <div id="warsztaty"><Workshops /></div>
+      <div id="projekt"><Projekt /></div>
+      <div id="zespol"><Team /></div>
       <Contact />
     </SiteShell>
   );

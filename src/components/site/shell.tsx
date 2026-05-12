@@ -20,10 +20,10 @@ export function useReveal() {
 }
 
 const NAV_LINKS = [
-  { to: "/o-nas", label: "O nas" },
-  { to: "/warsztaty", label: "Warsztaty" },
-  { to: "/projekt", label: "Projekt" },
-  { to: "/zespol", label: "Zespół" },
+  { href: "/#o-nas", label: "O nas" },
+  { href: "/#warsztaty", label: "Warsztaty" },
+  { href: "/#projekt", label: "Projekt" },
+  { href: "/#zespol", label: "Zespół" },
 ] as const;
 
 function Nav({ scrolled }: { scrolled: boolean }) {
@@ -41,14 +41,13 @@ function Nav({ scrolled }: { scrolled: boolean }) {
         </Link>
         <ul className="hidden items-center gap-7 md:flex">
           {NAV_LINKS.map((l) => (
-            <li key={l.to}>
-              <Link
-                to={l.to}
-                className="relative text-sm font-medium text-ink-soft transition hover:text-clay [&[data-status=active]]:text-clay"
+            <li key={l.href}>
+              <a
+                href={l.href}
+                className="relative text-sm font-medium text-ink-soft transition hover:text-clay"
               >
                 {l.label}
-                <span className="absolute -bottom-1 left-0 h-0.5 w-full origin-left scale-x-0 rounded-full bg-clay transition-transform duration-300 [[data-status=active]_&]:scale-x-100" />
-              </Link>
+              </a>
             </li>
           ))}
         </ul>
@@ -74,14 +73,14 @@ function Nav({ scrolled }: { scrolled: boolean }) {
         <div className="border-t border-border bg-warm/95 backdrop-blur-xl md:hidden">
           <ul className="mx-auto flex max-w-7xl flex-col gap-1 px-6 py-4">
             {NAV_LINKS.map((l) => (
-              <li key={l.to}>
-                <Link
-                  to={l.to}
+              <li key={l.href}>
+                <a
+                  href={l.href}
                   onClick={() => setOpen(false)}
-                  className="block rounded-xl px-4 py-3 text-base font-medium text-ink-soft transition hover:bg-clay-soft/60 hover:text-clay [&[data-status=active]]:bg-clay-soft [&[data-status=active]]:text-clay"
+                  className="block rounded-xl px-4 py-3 text-base font-medium text-ink-soft transition hover:bg-clay-soft/60 hover:text-clay"
                 >
                   {l.label}
-                </Link>
+                </a>
               </li>
             ))}
             <li className="mt-2">
@@ -109,8 +108,8 @@ function Footer() {
         </Link>
         <ul className="flex flex-wrap items-center justify-center gap-6 text-sm">
           {NAV_LINKS.map((l) => (
-            <li key={l.to}>
-              <Link to={l.to} className="transition hover:text-warm">{l.label}</Link>
+            <li key={l.href}>
+              <a href={l.href} className="transition hover:text-warm">{l.label}</a>
             </li>
           ))}
           <li><Link to="/kontakt" className="transition hover:text-warm">Kontakt</Link></li>
