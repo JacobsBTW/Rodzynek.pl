@@ -1,0 +1,140 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-cream: var(--cream);
+  --color-warm: var(--warm);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-clay: var(--clay);
+  --color-clay-soft: var(--clay-soft);
+  --color-sand: var(--sand);
+  --color-honey: var(--honey);
+  --font-display: var(--font-display);
+  --font-sans: var(--font-sans);
+}
+
+:root {
+  --radius: 0.875rem;
+
+  /* Brand palette — warm, grounded, optimistic */
+  --cream: oklch(0.965 0.018 80);
+  --warm: oklch(0.985 0.012 85);
+  --ink: oklch(0.22 0.04 55);
+  --ink-soft: oklch(0.36 0.04 55);
+  --muted-fg: oklch(0.55 0.025 65);
+  --clay: oklch(0.46 0.10 45);          /* deep warm brown / signature accent */
+  --clay-soft: oklch(0.92 0.04 65);     /* pale cream-clay tint */
+  --honey: oklch(0.78 0.13 70);         /* highlight gold */
+  --sand: oklch(0.88 0.025 75);
+
+  --background: var(--cream);
+  --foreground: var(--ink);
+  --card: oklch(1 0 0);
+  --card-foreground: var(--ink);
+  --popover: oklch(1 0 0);
+  --popover-foreground: var(--ink);
+  --primary: var(--clay);
+  --primary-foreground: oklch(0.985 0.005 80);
+  --secondary: var(--clay-soft);
+  --secondary-foreground: var(--clay);
+  --muted: var(--sand);
+  --muted-foreground: var(--muted-fg);
+  --accent: var(--honey);
+  --accent-foreground: var(--ink);
+  --destructive: oklch(0.577 0.225 25);
+  --destructive-foreground: oklch(0.985 0 0);
+  --border: oklch(0.88 0.02 75);
+  --input: oklch(0.88 0.02 75);
+  --ring: var(--clay);
+
+  --font-display: "Fraunces", Georgia, serif;
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+
+  --shadow-soft: 0 4px 24px -8px oklch(0.22 0.04 55 / 0.12);
+  --shadow-elev: 0 24px 60px -20px oklch(0.22 0.04 55 / 0.22);
+  --gradient-warm: linear-gradient(135deg, oklch(0.95 0.04 70) 0%, oklch(0.92 0.05 55) 100%);
+  --gradient-clay: linear-gradient(135deg, var(--clay) 0%, oklch(0.55 0.12 50) 100%);
+}
+
+@layer base {
+  * { border-color: var(--color-border); }
+  html { scroll-behavior: smooth; }
+  :target, [id] { scroll-margin-top: 6rem; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+  }
+  body {
+    background: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.6;
+  }
+  ::selection { background: var(--clay); color: white; }
+}
+
+@layer utilities {
+  .font-display { font-family: var(--font-display); font-optical-sizing: auto; }
+  .text-balance { text-wrap: balance; }
+  .text-pretty { text-wrap: pretty; }
+  .bg-grain {
+    background-image:
+      radial-gradient(oklch(0.46 0.10 45 / 0.04) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+  .gradient-warm { background: var(--gradient-warm); }
+  .gradient-clay { background: var(--gradient-clay); }
+  .shadow-soft { box-shadow: var(--shadow-soft); }
+  .shadow-elev { box-shadow: var(--shadow-elev); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes floatY {
+    0%,100% { transform: translateY(0); }
+    50%     { transform: translateY(-10px); }
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+  .animate-fade-up { animation: fadeUp 0.8s cubic-bezier(.2,.7,.2,1) both; }
+  .animate-float { animation: floatY 6s ease-in-out infinite; }
+  .animate-marquee { animation: marquee 38s linear infinite; }
+  .marquee-track:hover .animate-marquee { animation-play-state: paused; }
+
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.is-visible { opacity: 1; transform: translateY(0); }
+}
