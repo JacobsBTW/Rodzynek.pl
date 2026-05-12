@@ -115,6 +115,7 @@ function Footer() {
           <li><a href="/#kontakt" className="transition hover:text-warm">Kontakt</a></li>
         </ul>
         <span className="text-xs text-warm/45">© 2025 Rodzynek.pl · CLARA / Yourope · UŁ</span>
+        <span className="text-xs text-warm/45">Made with 🤎 by jacobs ®</span>
       </div>
     </footer>
   );
