@@ -1,23 +1,33 @@
 import { useRef, useState } from "react";
-import { z } from "zod";
+import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { Mail, MapPin, GraduationCap, ArrowRight, Check, Loader2 } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { contactSubmissionSchema, submitContactSubmission } from "@/lib/contact-submission";
 import { SectionLabel } from "./shell";
 
-const contactSchema = z.object({
-  name: z.string().trim().min(2, "Podaj imię i nazwisko").max(200),
-  email: z.string().trim().email("Niepoprawny adres e-mail").max(320),
-  org: z.string().trim().min(2, "Podaj nazwę instytucji").max(200),
-  topic: z.string().trim().min(1).max(200),
-  message: z.string().trim().max(4000).optional().or(z.literal("")),
-  website: z.string().max(0, "spam").optional().or(z.literal("")),
-});
-
-function Field({ label, name, type = "text", placeholder, required, error }: { label: string; name: string; type?: string; placeholder?: string; required?: boolean; error?: string }) {
+function Field({
+  label,
+  name,
+  type = "text",
+  placeholder,
+  required,
+  error,
+}: {
+  label: string;
+  name: string;
+  type?: string;
+  placeholder?: string;
+  required?: boolean;
+  error?: string;
+}) {
   return (
     <div>
-      <label htmlFor={name} className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ink-soft">{label}</label>
+      <label
+        htmlFor={name}
+        className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ink-soft"
+      >
+        {label}
+      </label>
       <input
         id={name}
         name={name}
@@ -36,6 +46,7 @@ export function Contact() {
   const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const formRef = useRef<HTMLFormElement>(null);
+  const submitContact = useServerFn(submitContactSubmission);
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -52,7 +63,7 @@ export function Contact() {
       website: String(fd.get("website") ?? ""),
     };
 
-    const parsed = contactSchema.safeParse(raw);
+    const parsed = contactSubmissionSchema.safeParse(raw);
     if (!parsed.success) {
       const fieldErrs: Record<string, string> = {};
       for (const issue of parsed.error.issues) {
@@ -71,15 +82,9 @@ export function Contact() {
     }
 
     setStatus("sending");
-    const { error } = await supabase.from("contact_submissions").insert({
-      name: parsed.data.name,
-      email: parsed.data.email,
-      organization: parsed.data.org,
-      topic: parsed.data.topic,
-      message: parsed.data.message?.trim() ? parsed.data.message : null,
-    });
-
-    if (error) {
+    try {
+      await submitContact({ data: parsed.data });
+    } catch (error) {
       console.error("contact submit error", error);
       setStatus("idle");
       toast.error("Nie udało się wysłać", {
@@ -99,7 +104,10 @@ export function Contact() {
 
   return (
     <section className="relative overflow-hidden bg-clay pt-32 pb-24 text-warm md:pt-40 md:pb-32">
-      <div aria-hidden className="pointer-events-none absolute -bottom-12 right-[-2rem] select-none font-display text-[14rem] font-black leading-none tracking-tighter text-warm/[0.06] md:text-[18rem]">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -bottom-12 right-[-2rem] select-none font-display text-[14rem] font-black leading-none tracking-tighter text-warm/[0.06] md:text-[18rem]"
+      >
         Rodzynek
       </div>
       <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-6 md:grid-cols-[1.1fr_1fr] md:px-10">
@@ -109,21 +117,41 @@ export function Contact() {
             Chcesz mieć nas u siebie?
           </h1>
           <p className="mt-5 max-w-lg text-warm/80 text-pretty">
-            Jesteś nauczycielem, pedagogiem, animatorem lub działasz w NGO?
-            Napisz do nas — ustalimy szczegóły i przyjedziemy z warsztatem.
+            Jesteś nauczycielem, pedagogiem, animatorem lub działasz w NGO? Napisz do nas — ustalimy
+            szczegóły i przyjedziemy z warsztatem.
           </p>
           <ul className="mt-10 space-y-4">
             {[
-              { icon: <Mail className="h-5 w-5" />, label: "E-mail", value: "rodzynekpl.kontakt@gmail.com", href: "mailto:rodzynekpl.kontakt@gmail.com" },
-              { icon: <MapPin className="h-5 w-5" />, label: "Baza działań", value: "Łódź & okolice (i nie tylko)" },
-              { icon: <GraduationCap className="h-5 w-5" />, label: "Uczelnia", value: "Uniwersytet Łódzki · CLARA / Yourope" },
+              {
+                icon: <Mail className="h-5 w-5" />,
+                label: "E-mail",
+                value: "rodzynekpl.kontakt@gmail.com",
+                href: "mailto:rodzynekpl.kontakt@gmail.com",
+              },
+              {
+                icon: <MapPin className="h-5 w-5" />,
+                label: "Baza działań",
+                value: "Łódź & okolice (i nie tylko)",
+              },
+              {
+                icon: <GraduationCap className="h-5 w-5" />,
+                label: "Uczelnia",
+                value: "Uniwersytet Łódzki · CLARA / Yourope",
+              },
             ].map((c) => (
               <li key={c.label} className="flex items-center gap-4">
-                <div className="flex h-11 w-11 flex-none items-center justify-center rounded-xl bg-warm/15">{c.icon}</div>
+                <div className="flex h-11 w-11 flex-none items-center justify-center rounded-xl bg-warm/15">
+                  {c.icon}
+                </div>
                 <div>
                   <div className="text-xs text-warm/65">{c.label}</div>
                   {c.href ? (
-                    <a href={c.href} className="text-base font-semibold underline-offset-4 hover:underline">{c.value}</a>
+                    <a
+                      href={c.href}
+                      className="text-base font-semibold underline-offset-4 hover:underline"
+                    >
+                      {c.value}
+                    </a>
                   ) : (
                     <div className="text-base font-semibold">{c.value}</div>
                   )}
@@ -133,16 +161,51 @@ export function Contact() {
           </ul>
         </div>
 
-        <form ref={formRef} onSubmit={onSubmit} aria-label="Formularz kontaktowy Rodzynek.pl" noValidate className="rounded-3xl bg-card p-7 text-foreground shadow-elev md:p-9">
+        <form
+          ref={formRef}
+          onSubmit={onSubmit}
+          aria-label="Formularz kontaktowy Rodzynek.pl"
+          noValidate
+          className="rounded-3xl bg-card p-7 text-foreground shadow-elev md:p-9"
+        >
           <h2 className="font-display text-xl font-bold">Zaproś Rodzynek 🍇</h2>
           <p className="mt-1 text-sm text-muted-foreground">Odpowiadamy w ciągu ~24 godzin.</p>
           <fieldset disabled={sending || sent} className="mt-6 grid gap-4 disabled:opacity-70">
-            <Field label="Imię i nazwisko" name="name" placeholder="np. Anna Kowalska" required error={errors.name} />
-            <Field label="E-mail" name="email" type="email" placeholder="anna@szkola.edu.pl" required error={errors.email} />
-            <Field label="Instytucja / Organizacja" name="org" placeholder="np. SP nr 5 w Łodzi" required error={errors.org} />
+            <Field
+              label="Imię i nazwisko"
+              name="name"
+              placeholder="np. Anna Kowalska"
+              required
+              error={errors.name}
+            />
+            <Field
+              label="E-mail"
+              name="email"
+              type="email"
+              placeholder="anna@szkola.edu.pl"
+              required
+              error={errors.email}
+            />
+            <Field
+              label="Instytucja / Organizacja"
+              name="org"
+              placeholder="np. SP nr 5 w Łodzi"
+              required
+              error={errors.org}
+            />
             <div>
-              <label htmlFor="topic" className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ink-soft">Interesuje mnie</label>
-              <select id="topic" name="topic" defaultValue="Warsztat dla uczniów (szkoła ponadpodstawowa)" className="w-full rounded-xl border border-border bg-warm px-4 py-3 text-sm outline-none transition focus:border-clay focus:bg-card focus-visible:ring-2 focus-visible:ring-ring/40">
+              <label
+                htmlFor="topic"
+                className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ink-soft"
+              >
+                Interesuje mnie
+              </label>
+              <select
+                id="topic"
+                name="topic"
+                defaultValue="Warsztat dla uczniów (szkoła ponadpodstawowa)"
+                className="w-full rounded-xl border border-border bg-warm px-4 py-3 text-sm outline-none transition focus:border-clay focus:bg-card focus-visible:ring-2 focus-visible:ring-ring/40"
+              >
                 <option>Warsztat dla uczniów (szkoła ponadpodstawowa)</option>
                 <option>Warsztat dla uczniów (szkoła podstawowa kl. 7–8)</option>
                 <option>Szkolenie dla nauczycieli / pedagogów</option>
@@ -150,8 +213,19 @@ export function Contact() {
               </select>
             </div>
             <div>
-              <label htmlFor="message" className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ink-soft">Wiadomość (opcjonalnie)</label>
-              <textarea id="message" name="message" rows={4} className="w-full resize-none rounded-xl border border-border bg-warm px-4 py-3 text-sm outline-none transition focus:border-clay focus:bg-card focus-visible:ring-2 focus-visible:ring-ring/40" placeholder="Powiedz nam coś więcej…" />
+              <label
+                htmlFor="message"
+                className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ink-soft"
+              >
+                Wiadomość (opcjonalnie)
+              </label>
+              <textarea
+                id="message"
+                name="message"
+                rows={4}
+                className="w-full resize-none rounded-xl border border-border bg-warm px-4 py-3 text-sm outline-none transition focus:border-clay focus:bg-card focus-visible:ring-2 focus-visible:ring-ring/40"
+                placeholder="Powiedz nam coś więcej…"
+              />
               {errors.message && <p className="mt-1 text-xs text-destructive">{errors.message}</p>}
             </div>
             <div aria-hidden className="absolute left-[-9999px] top-auto h-0 w-0 overflow-hidden">
@@ -163,14 +237,24 @@ export function Contact() {
               disabled={sending || sent}
               className="mt-1 inline-flex items-center justify-center gap-2 rounded-xl bg-clay px-5 py-3.5 text-sm font-semibold text-primary-foreground transition hover:opacity-90 disabled:opacity-100"
             >
-              {sent ? (<><Check className="h-4 w-4" /> Wysłano!</>)
-                : sending ? (<><Loader2 className="h-4 w-4 animate-spin" /> Wysyłam…</>)
-                : (<>Wyślij zgłoszenie <ArrowRight className="h-4 w-4" /></>)}
+              {sent ? (
+                <>
+                  <Check className="h-4 w-4" /> Wysłano!
+                </>
+              ) : sending ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" /> Wysyłam…
+                </>
+              ) : (
+                <>
+                  Wyślij zgłoszenie <ArrowRight className="h-4 w-4" />
+                </>
+              )}
             </button>
             <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-              Wysyłając formularz wyrażasz zgodę na przetwarzanie podanych danych
-              (imię, e-mail, instytucja) wyłącznie w celu odpowiedzi na zgłoszenie.
-              Dane nie są udostępniane stronom trzecim.
+              Wysyłając formularz wyrażasz zgodę na przetwarzanie podanych danych (imię, e-mail,
+              instytucja) wyłącznie w celu odpowiedzi na zgłoszenie. Dane nie są udostępniane
+              stronom trzecim.
             </p>
           </fieldset>
         </form>
