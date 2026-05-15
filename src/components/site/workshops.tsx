@@ -6,7 +6,7 @@ export function Workshops() {
     {
       icon: <Puzzle className="h-6 w-6" />,
       accent: "bg-clay",
-      title: "Presja rówieśnicza – skąd się bierze?",
+      title: "Presja rówieśnicza - skąd się bierze?",
       desc: "Mechanizmy presji społecznej: jak działa, dlaczego jej ulegamy i co możemy z tym zrobić. Psychologia społeczna bez akademickiego żargonu.",
       tags: ["90 min", "12–18 lat", "Interaktywny"],
     },
