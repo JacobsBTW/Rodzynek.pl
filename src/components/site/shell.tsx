@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Menu, X } from "lucide-react";
 
@@ -36,7 +36,7 @@ function Nav({ scrolled }: { scrolled: boolean }) {
       }`}
     >
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3 md:px-10">
-        <Link to="/" aria-label="Rodzynek.pl — strona główna" className="flex items-center gap-2">
+        <Link to="/" aria-label="Rodzynek.pl - strona główna" className="flex items-center gap-2">
           <img src="/logo-icon.png" alt="Rodzynek.pl" className="h-10 w-auto" />
         </Link>
         <ul className="hidden items-center gap-7 md:flex">
@@ -109,10 +109,16 @@ function Footer() {
         <ul className="flex flex-wrap items-center justify-center gap-6 text-sm">
           {NAV_LINKS.map((l) => (
             <li key={l.href}>
-              <a href={l.href} className="transition hover:text-warm">{l.label}</a>
+              <a href={l.href} className="transition hover:text-warm">
+                {l.label}
+              </a>
             </li>
           ))}
-          <li><a href="/#kontakt" className="transition hover:text-warm">Kontakt</a></li>
+          <li>
+            <a href="/#kontakt" className="transition hover:text-warm">
+              Kontakt
+            </a>
+          </li>
         </ul>
         <span className="text-xs text-warm/45">© 2025 Rodzynek.pl · CLARA / Yourope · UŁ</span>
         <span className="text-xs text-warm/45">Made with 🤎 by jacobs ®</span>
@@ -146,17 +152,35 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function SectionLabel({ children, center, className = "" }: { children: React.ReactNode; center?: boolean; className?: string }) {
+export function SectionLabel({
+  children,
+  center,
+  className = "",
+}: {
+  children: React.ReactNode;
+  center?: boolean;
+  className?: string;
+}) {
   return (
-    <p className={`text-xs font-bold uppercase tracking-[0.16em] text-clay ${center ? "text-center" : ""} ${className}`}>
+    <p
+      className={`text-xs font-bold uppercase tracking-[0.16em] text-clay ${center ? "text-center" : ""} ${className}`}
+    >
       {children}
     </p>
   );
 }
 
-export function SectionTitle({ children, center }: { children: React.ReactNode; center?: boolean }) {
+export function SectionTitle({
+  children,
+  center,
+}: {
+  children: React.ReactNode;
+  center?: boolean;
+}) {
   return (
-    <h1 className={`mt-3 font-display text-4xl font-black leading-[1.05] tracking-[-0.025em] text-balance md:text-5xl ${center ? "text-center" : ""}`}>
+    <h1
+      className={`mt-3 font-display text-4xl font-black leading-[1.05] tracking-[-0.025em] text-balance md:text-5xl ${center ? "text-center" : ""}`}
+    >
       {children}
     </h1>
   );

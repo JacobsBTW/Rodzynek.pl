@@ -12,8 +12,8 @@ CREATE TABLE public.contact_submissions (
 
 ALTER TABLE public.contact_submissions ENABLE ROW LEVEL SECURITY;
 
--- Anyone (incl. anon) may submit a contact form
-CREATE POLICY "Anyone can submit contact form"
+-- Każdy (również anonimowo) może wysłać formularz kontaktowy
+CREATE POLICY "Kazdy moze wyslac formularz kontaktowy"
   ON public.contact_submissions
   FOR INSERT
   TO anon, authenticated
@@ -25,14 +25,14 @@ CREATE POLICY "Anyone can submit contact form"
     AND (message IS NULL OR length(message) <= 4000)
   );
 
--- Only authenticated users can read/update submissions (admin panel later)
-CREATE POLICY "Authenticated can view submissions"
+-- Tylko zalogowani użytkownicy mogą odczytywać i aktualizować zgłoszenia (później panel administracyjny)
+CREATE POLICY "Zalogowani moga widziec zgloszenia"
   ON public.contact_submissions
   FOR SELECT
   TO authenticated
   USING (true);
 
-CREATE POLICY "Authenticated can update submissions"
+CREATE POLICY "Zalogowani moga aktualizowac zgloszenia"
   ON public.contact_submissions
   FOR UPDATE
   TO authenticated

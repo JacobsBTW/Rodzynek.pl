@@ -24,21 +24,21 @@ AS $$
   )
 $$;
 
-CREATE POLICY "Users can view own roles"
+CREATE POLICY "Uzytkownicy moga widziec swoje role"
   ON public.user_roles FOR SELECT
   TO authenticated
   USING (user_id = auth.uid() OR public.has_role(auth.uid(), 'admin'));
 
--- Tighten contact_submissions to admins only
-DROP POLICY IF EXISTS "Authenticated can view submissions" ON public.contact_submissions;
-DROP POLICY IF EXISTS "Authenticated can update submissions" ON public.contact_submissions;
+-- Ograniczenie contact_submissions tylko do administratorów
+DROP POLICY IF EXISTS "Zalogowani moga widziec zgloszenia" ON public.contact_submissions;
+DROP POLICY IF EXISTS "Zalogowani moga aktualizowac zgloszenia" ON public.contact_submissions;
 
-CREATE POLICY "Admins can view submissions"
+CREATE POLICY "Administratorzy moga widziec zgloszenia"
   ON public.contact_submissions FOR SELECT
   TO authenticated
   USING (public.has_role(auth.uid(), 'admin'));
 
-CREATE POLICY "Admins can update submissions"
+CREATE POLICY "Administratorzy moga aktualizowac zgloszenia"
   ON public.contact_submissions FOR UPDATE
   TO authenticated
   USING (public.has_role(auth.uid(), 'admin'))

@@ -1,4 +1,4 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+﻿import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   Outlet,
   Link,
@@ -16,16 +16,16 @@ function NotFoundComponent() {
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
+        <h2 className="mt-4 text-xl font-semibold text-foreground">Nie znaleziono strony</h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
+          Strona, której szukasz, nie istnieje albo została przeniesiona.
         </p>
         <div className="mt-6">
           <Link
             to="/"
             className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
-            Go home
+            Wróć na stronę główną
           </Link>
         </div>
       </div>
@@ -41,10 +41,10 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          This page didn't load
+          Ta strona się nie załadowała
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Something went wrong on our end. You can try refreshing or head back home.
+          Coś poszło nie tak po naszej stronie. Możesz odświeżyć widok albo wrócić na stronę główną.
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
@@ -54,13 +54,13 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
             }}
             className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
-            Try again
+            Spróbuj ponownie
           </button>
           <a
             href="/"
             className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
           >
-            Go home
+            Wróć na stronę główną
           </a>
         </div>
       </div>
@@ -73,11 +73,19 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Rodzynek.pl — peer-led warsztaty o presji rówieśniczej" },
-      { name: "description", content: "Studencka inicjatywa z UŁ. Bezpłatne, peer-led warsztaty o presji społecznej, asertywności i granicach — dla młodzieży, prowadzone przez młodzież." },
+      { title: "Rodzynek.pl - rówieśnicze warsztaty o presji rówieśniczej" },
+      {
+        name: "description",
+        content:
+          "Studencka inicjatywa z UŁ. Bezpłatne warsztaty o presji społecznej, asertywności i granicach - dla młodzieży, prowadzone przez młodych ludzi.",
+      },
       { name: "author", content: "Rodzynek.pl · CLARA / Yourope · Uniwersytet Łódzki" },
-      { property: "og:title", content: "Rodzynek.pl — peer-led warsztaty dla młodzieży" },
-      { property: "og:description", content: "Rozmowa rówieśnika z rówieśnikiem zmienia więcej niż wykład. Zaproś nas do swojej szkoły lub organizacji." },
+      { property: "og:title", content: "Rodzynek.pl - rówieśnicze warsztaty dla młodzieży" },
+      {
+        property: "og:description",
+        content:
+          "Rozmowa rówieśnika z rówieśnikiem zmienia więcej niż wykład. Zaproś nas do swojej szkoły lub organizacji.",
+      },
       { property: "og:type", content: "website" },
       { property: "og:locale", content: "pl_PL" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -86,7 +94,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "icon", type: "image/png", href: "/favicon.png" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..900&family=Outfit:wght@300..800&display=swap" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..900&family=Outfit:wght@300..800&display=swap",
+      },
       { rel: "stylesheet", href: appCss },
     ],
   }),

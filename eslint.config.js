@@ -27,7 +27,7 @@ export default tseslint.config(
             {
               name: "server-only",
               message:
-                "TanStack Start does not use the Next.js `server-only` package. Rename the module to `*.server.ts` or mark it with `@tanstack/react-start/server-only`.",
+                "TanStack Start nie używa pakietu Next.js `server-only`. Zmień nazwę modułu na `*.server.ts` albo oznacz go przez `@tanstack/react-start/server-only`.",
             },
           ],
         },
