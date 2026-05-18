@@ -67,7 +67,7 @@ export function Team() {
         <p className="mt-10 text-center text-sm text-muted-foreground">
           Chcesz dołączyć do zespołu?{" "}
           <Link
-            to="/kontakt"
+            to="#kontakt"
             className="font-semibold text-clay underline-offset-4 hover:underline"
           >
             Napisz do nas →
