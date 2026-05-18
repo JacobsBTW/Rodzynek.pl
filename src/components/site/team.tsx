@@ -5,22 +5,18 @@ export function Team() {
   const team = [
     {
       initials: "IMG",
-      role: "Funkcja",
       bio: "Niedługo przedstawimy zespół Rodzynek.pl - studentów, mentorów rówieśniczych i badaczki stojące za projektem.",
     },
     {
       initials: "IMG",
-      role: "Warsztaty",
       bio: "Prowadzący warsztaty rówieśnicze w szkołach i organizacjach młodzieżowych.",
     },
     {
       initials: "IMG",
-      role: "Komunikacja",
       bio: "Treści, media społecznościowe i kontakt z partnerami edukacyjnymi.",
     },
     {
       initials: "IMG",
-      role: "Badania",
       bio: "Ewaluacja warsztatów i współpraca akademicka w ramach projektu CLARA.",
     },
   ];
@@ -63,9 +59,6 @@ export function Team() {
               </div>
               <div className="p-5">
                 <h3 className="font-display text-lg font-bold">Imię i Nazwisko</h3>
-                <p className="mt-1 text-[11px] font-bold uppercase tracking-[0.12em] text-clay">
-                  {m.role}
-                </p>
                 <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{m.bio}</p>
               </div>
             </article>

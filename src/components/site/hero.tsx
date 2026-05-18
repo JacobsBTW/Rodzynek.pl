@@ -1,5 +1,4 @@
 ﻿import { Sparkles, ArrowRight, HeartHandshake, MessageCircle, Shield } from "lucide-react";
-import { Link } from "@tanstack/react-router";
 
 function FloatCard({
   icon,
@@ -65,19 +64,19 @@ export function Hero() {
             przez młodych, dla młodych.
           </p>
           <div className="mt-9 flex flex-wrap gap-3">
-            <Link
-              to="/warsztaty"
+            <a
+              href="#warsztaty"
               className="group inline-flex items-center gap-2 rounded-full bg-clay px-7 py-3.5 text-sm font-semibold text-primary-foreground shadow-soft transition hover:shadow-elev hover:-translate-y-0.5"
             >
               Nasze warsztaty
               <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
-            </Link>
-            <Link
-              to="/o-nas"
+            </a>
+            <a
+              href="#o-nas"
               className="inline-flex items-center gap-2 rounded-full border border-border bg-warm px-7 py-3.5 text-sm font-semibold text-foreground transition hover:border-clay hover:text-clay"
             >
               Poznaj nas
-            </Link>
+            </a>
           </div>
         </div>
 
