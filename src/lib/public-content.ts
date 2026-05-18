@@ -246,14 +246,13 @@ export const publicContent = {
       whatLabel: "Co robimy?",
       whatBody:
         "Prowadzimy warsztaty, szkolimy liderów rówieśniczych i tworzymy przestrzeń, w której nie musisz udawać. Wierzymy, że prawdziwa zmiana zaczyna się od małych kroków i od ludzi, którzy są obok.",
-      closing: "Jesteśmy tu po to, żeby nie być samym.",
+      closing: "",
     },
     team: {
       label: "Nasz zespół",
       titleBefore: "Ludzie za ",
       titleEmphasis: "Rodzynkiem",
-      intro:
-        "Studenci, mentorzy rówieśniczy, badaczki i animatorki - łączy nas wiara, że rozmowa zmienia więcej niż wykład.",
+      intro: "",
       photoSoon: "Zdjęcie wkrótce",
       contactLead: "Chcesz działać razem?",
       contactLink: "Napisz do nas →",
@@ -490,14 +489,13 @@ export const publicContent = {
       whatLabel: "What do we do?",
       whatBody:
         "We run workshops, train peer leaders and create space where you do not have to pretend. We believe real change starts with small steps and with people who are nearby.",
-      closing: "We are here so no one has to be alone.",
+      closing: "",
     },
     team: {
       label: "Our team",
       titleBefore: "The people behind ",
       titleEmphasis: "Rodzynek",
-      intro:
-        "Students, peer mentors, researchers and facilitators - connected by the belief that conversation changes more than a lecture.",
+      intro: "",
       photoSoon: "Photo soon",
       contactLead: "Want to work together?",
       contactLink: "Contact us →",

@@ -4,6 +4,7 @@ import { SectionLabel, SectionTitle } from "./shell";
 const memberImages: Record<string, string> = {
   "Kornelia Łabieniec": "/team/kornelia-labieniec.jpg",
   "Zuzanna Malinowska": "/team/zuzanna-malinowska.jpg",
+  "Lena Drogosz": "/team/lena-dlogosz.png",
 };
 
 export function Team({ locale = "pl" }: { locale?: Locale }) {
@@ -24,7 +25,7 @@ export function Team({ locale = "pl" }: { locale?: Locale }) {
             {t.titleBefore}
             <em className="italic text-clay">{t.titleEmphasis}</em>
           </SectionTitle>
-          <p className="mt-4 text-muted-foreground">{t.intro}</p>
+          {t.intro && <p className="mt-4 text-muted-foreground">{t.intro}</p>}
         </div>
         <div className="mt-14 grid gap-5 sm:grid-cols-2 md:grid-cols-4">
           {t.members.map(([name, initials, quote], i) => {

@@ -65,9 +65,11 @@ export function Projekt({ locale = "pl" }: { locale?: Locale }) {
           <div className="rounded-3xl bg-ink p-7 text-warm shadow-elev">
             <SectionLabel className="text-honey">{t.whatLabel}</SectionLabel>
             <p className="mt-4 text-lg leading-relaxed text-warm/80 text-pretty">{t.whatBody}</p>
-            <p className="mt-5 font-display text-2xl font-light italic leading-snug text-warm">
-              {t.closing}
-            </p>
+            {t.closing && (
+              <p className="mt-5 font-display text-2xl font-light italic leading-snug text-warm">
+                {t.closing}
+              </p>
+            )}
           </div>
         </div>
       </div>
