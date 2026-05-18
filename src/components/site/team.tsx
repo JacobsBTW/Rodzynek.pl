@@ -1,23 +1,28 @@
-﻿import { Link } from "@tanstack/react-router";
 import { SectionLabel, SectionTitle } from "./shell";
 
 export function Team() {
   const team = [
     {
-      initials: "IMG",
-      bio: "Niedługo przedstawimy zespół Rodzynek.pl - studentów, mentorów rówieśniczych i badaczki stojące za projektem.",
+      name: "Kornelia Łabieniec",
+      initials: "KŁ",
+      quote: "Trudne rzeczy łatwiej przejść z uśmiechem. Serio.",
+      image: "/team/kornelia-labieniec.jpg",
     },
     {
-      initials: "IMG",
-      bio: "Prowadzący warsztaty rówieśnicze w szkołach i organizacjach młodzieżowych.",
+      name: "Iwo Nalbach",
+      initials: "IN",
+      quote: "Byłem obok. Widziałem. I zostałem.",
     },
     {
-      initials: "IMG",
-      bio: "Treści, media społecznościowe i kontakt z partnerami edukacyjnymi.",
+      name: "Zuzanna Malinowska",
+      initials: "ZM",
+      quote: "Wiedziałam, że nie jestem sama. Chcę, żebyś też to wiedział.",
+      image: "/team/zuzanna-malinowska.jpg",
     },
     {
-      initials: "IMG",
-      bio: "Ewaluacja warsztatów i współpraca akademicka w ramach projektu CLARA.",
+      name: "Lena Drogosz",
+      initials: "LD",
+      quote: "Z małej iskry można zrobić pożar.",
     },
   ];
   const tones = [
@@ -26,6 +31,7 @@ export function Team() {
     "bg-sand text-ink-soft",
     "bg-clay-soft text-clay",
   ];
+
   return (
     <section className="bg-warm pt-32 pb-24 md:pt-40 md:pb-32">
       <div className="mx-auto max-w-7xl px-6 md:px-10">
@@ -42,36 +48,44 @@ export function Team() {
         <div className="mt-14 grid gap-5 sm:grid-cols-2 md:grid-cols-4">
           {team.map((m, i) => (
             <article
-              key={i}
+              key={m.name}
               className="reveal group overflow-hidden rounded-3xl border border-border bg-card transition hover:-translate-y-1 hover:shadow-elev"
               style={{ transitionDelay: `${i * 70}ms` }}
             >
               <div
-                className={`relative flex aspect-square items-center justify-center ${tones[i]}`}
+                className={`relative flex aspect-square items-center justify-center overflow-hidden ${tones[i]}`}
               >
-                <div className="absolute inset-6 rounded-full bg-card/40 ring-1 ring-inset ring-warm/40" />
-                <span className="relative font-display text-5xl font-black tracking-tight">
-                  {m.initials}
-                </span>
-                <span className="absolute bottom-3 right-3 rounded-full bg-card/80 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-ink-soft backdrop-blur">
-                  Wkrótce
-                </span>
+                {m.image ? (
+                  <img src={m.image} alt={m.name} className="h-full w-full object-cover" />
+                ) : (
+                  <>
+                    <div className="absolute inset-6 rounded-full bg-card/40 ring-1 ring-inset ring-warm/40" />
+                    <span className="relative font-display text-5xl font-black tracking-tight">
+                      {m.initials}
+                    </span>
+                    <span className="absolute bottom-3 right-3 rounded-full bg-card/80 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-ink-soft backdrop-blur">
+                      Zdjęcie wkrótce
+                    </span>
+                  </>
+                )}
               </div>
               <div className="p-5">
-                <h3 className="font-display text-lg font-bold">Imię i Nazwisko</h3>
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{m.bio}</p>
+                <h3 className="font-display text-lg font-bold">{m.name}</h3>
+                <p className="mt-3 text-sm italic leading-relaxed text-muted-foreground">
+                  „{m.quote}”
+                </p>
               </div>
             </article>
           ))}
         </div>
         <p className="mt-10 text-center text-sm text-muted-foreground">
-          Chcesz dołączyć do zespołu?{" "}
-          <Link
-            to="#kontakt"
+          Chcesz działać razem?{" "}
+          <a
+            href="/#kontakt"
             className="font-semibold text-clay underline-offset-4 hover:underline"
           >
             Napisz do nas →
-          </Link>
+          </a>
         </p>
       </div>
     </section>
