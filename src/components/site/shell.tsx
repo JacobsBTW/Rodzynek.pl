@@ -81,7 +81,7 @@ function Nav({
           <a
             href={alternateHref}
             aria-label={t.languageAria}
-            className="hidden rounded-full border border-border bg-warm px-3.5 py-2 text-xs font-bold uppercase tracking-[0.12em] text-ink-soft transition hover:border-clay hover:text-clay md:inline-flex"
+            className="inline-flex h-10 items-center justify-center rounded-full border border-border bg-warm px-4 text-sm font-bold text-ink-soft shadow-soft transition hover:border-clay hover:text-clay focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
           >
             {t.languageLabel}
           </a>
@@ -116,15 +116,6 @@ function Nav({
                 </a>
               </li>
             ))}
-            <li>
-              <a
-                href={alternateHref}
-                onClick={() => setOpen(false)}
-                className="block rounded-xl px-4 py-3 text-base font-medium text-ink-soft transition hover:bg-clay-soft/60 hover:text-clay"
-              >
-                {t.languageLabel}
-              </a>
-            </li>
             <li className="mt-2">
               <Link
                 href={getHomeSectionHref(locale, "contact")}
