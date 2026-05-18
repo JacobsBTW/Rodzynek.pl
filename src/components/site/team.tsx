@@ -3,6 +3,7 @@ import { SectionLabel, SectionTitle } from "./shell";
 
 const memberImages: Record<string, string> = {
   "Kornelia Łabieniec": "/team/kornelia-labieniec.jpg",
+  "Iwo Nalbach": "/team/iwo-nalbach.jpg",
   "Zuzanna Malinowska": "/team/zuzanna-malinowska.jpg",
   "Lena Drogosz": "/team/lena-dlogosz.png",
 };
