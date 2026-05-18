@@ -1,17 +1,21 @@
-﻿import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
 import { Mail, MapPin, GraduationCap, ArrowRight, Check, Loader2 } from "lucide-react";
+import { publicContent, type Locale } from "@/lib/public-content";
 import { SectionLabel } from "./shell";
 
-const contactSchema = z.object({
-  name: z.string().trim().min(2, "Podaj imię i nazwisko").max(200),
-  email: z.string().trim().email("Niepoprawny adres e-mail").max(320),
-  org: z.string().trim().min(2, "Podaj nazwę instytucji").max(200),
-  topic: z.string().trim().min(1).max(200),
-  message: z.string().trim().max(4000).optional().or(z.literal("")),
-  website: z.string().max(0, "spam").optional().or(z.literal("")),
-});
+function getContactSchema(locale: Locale) {
+  const validation = publicContent[locale].contact.validation;
+  return z.object({
+    name: z.string().trim().min(2, validation.name).max(200),
+    email: z.string().trim().email(validation.email).max(320),
+    org: z.string().trim().min(2, validation.org).max(200),
+    topic: z.string().trim().min(1).max(200),
+    message: z.string().trim().max(4000).optional().or(z.literal("")),
+    website: z.string().max(0, validation.spam).optional().or(z.literal("")),
+  });
+}
 
 function Field({
   label,
@@ -50,10 +54,17 @@ function Field({
   );
 }
 
-export function Contact() {
+export function Contact({ locale = "pl" }: { locale?: Locale }) {
   const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const formRef = useRef<HTMLFormElement>(null);
+  const t = publicContent[locale].contact;
+  const contactSchema = useMemo(() => getContactSchema(locale), [locale]);
+  const infoIcons = [
+    <Mail className="h-5 w-5" />,
+    <MapPin className="h-5 w-5" />,
+    <GraduationCap className="h-5 w-5" />,
+  ];
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -74,11 +85,11 @@ export function Contact() {
     if (!parsed.success) {
       const fieldErrs: Record<string, string> = {};
       for (const issue of parsed.error.issues) {
-        const k = issue.path[0];
-        if (typeof k === "string" && !fieldErrs[k]) fieldErrs[k] = issue.message;
+        const key = issue.path[0];
+        if (typeof key === "string" && !fieldErrs[key]) fieldErrs[key] = issue.message;
       }
       setErrors(fieldErrs);
-      toast.error("Sprawdź formularz", { description: "Niektóre pola wymagają poprawy." });
+      toast.error(t.toasts.invalidTitle, { description: t.toasts.invalidDescription });
       return;
     }
 
@@ -106,8 +117,8 @@ export function Contact() {
     } catch (error) {
       console.error("contact submit network error", error);
       setStatus("idle");
-      toast.error("Nie udało się wysłać", {
-        description: "Spróbuj ponownie za chwilę albo napisz na rodzynekpl.kontakt@gmail.com.",
+      toast.error(t.toasts.errorTitle, {
+        description: t.toasts.errorDescription,
       });
       return;
     }
@@ -121,15 +132,15 @@ export function Contact() {
       }
       console.error("contact submit error", response.status, details);
       setStatus("idle");
-      toast.error("Nie udało się wysłać", {
-        description: "Spróbuj ponownie za chwilę albo napisz na rodzynekpl.kontakt@gmail.com.",
+      toast.error(t.toasts.errorTitle, {
+        description: t.toasts.errorDescription,
       });
       return;
     }
 
     setStatus("sent");
     formRef.current?.reset();
-    toast.success("Wysłano!", { description: "Odezwiemy się w ciągu ~24 godzin." });
+    toast.success(t.toasts.successTitle, { description: t.toasts.successDescription });
     setTimeout(() => setStatus("idle"), 6000);
   };
 
@@ -146,48 +157,28 @@ export function Contact() {
       </div>
       <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-6 md:grid-cols-[1.1fr_1fr] md:px-10">
         <div>
-          <SectionLabel className="text-warm/70">Kontakt</SectionLabel>
+          <SectionLabel className="text-warm/70">{t.label}</SectionLabel>
           <h1 className="mt-3 font-display text-4xl font-black leading-[1.05] tracking-tight text-balance md:text-5xl">
-            Chcesz mieć nas u siebie?
+            {t.title}
           </h1>
-          <p className="mt-5 max-w-lg text-warm/80 text-pretty">
-            Jesteś nauczycielem, pedagogiem, animatorem lub działasz w NGO? Napisz do nas - ustalimy
-            szczegóły i przyjedziemy z warsztatem.
-          </p>
+          <p className="mt-5 max-w-lg text-warm/80 text-pretty">{t.intro}</p>
           <ul className="mt-10 space-y-4">
-            {[
-              {
-                icon: <Mail className="h-5 w-5" />,
-                label: "E-mail",
-                value: "rodzynekpl.kontakt@gmail.com",
-                href: "mailto:rodzynekpl.kontakt@gmail.com",
-              },
-              {
-                icon: <MapPin className="h-5 w-5" />,
-                label: "Baza działań",
-                value: "Łódź & okolice (i nie tylko)",
-              },
-              {
-                icon: <GraduationCap className="h-5 w-5" />,
-                label: "Uczelnia",
-                value: "Uniwersytet Łódzki · CLARA / Yourope",
-              },
-            ].map((c) => (
-              <li key={c.label} className="flex items-center gap-4">
+            {t.info.map(([label, value], i) => (
+              <li key={label} className="flex items-center gap-4">
                 <div className="flex h-11 w-11 flex-none items-center justify-center rounded-xl bg-warm/15">
-                  {c.icon}
+                  {infoIcons[i]}
                 </div>
                 <div>
-                  <div className="text-xs text-warm/65">{c.label}</div>
-                  {c.href ? (
+                  <div className="text-xs text-warm/65">{label}</div>
+                  {label === "E-mail" ? (
                     <a
-                      href={c.href}
+                      href={`mailto:${value}`}
                       className="text-base font-semibold underline-offset-4 hover:underline"
                     >
-                      {c.value}
+                      {value}
                     </a>
                   ) : (
-                    <div className="text-base font-semibold">{c.value}</div>
+                    <div className="text-base font-semibold">{value}</div>
                   )}
                 </div>
               </li>
@@ -198,32 +189,32 @@ export function Contact() {
         <form
           ref={formRef}
           onSubmit={onSubmit}
-          aria-label="Formularz kontaktowy Rodzynek.pl"
+          aria-label={t.formAria}
           noValidate
           className="rounded-3xl bg-card p-7 text-foreground shadow-elev md:p-9"
         >
-          <h2 className="font-display text-xl font-bold">Zaproś Rodzynek 🍇</h2>
-          <p className="mt-1 text-sm text-muted-foreground">Odpowiadamy w ciągu ~24 godzin.</p>
+          <h2 className="font-display text-xl font-bold">{t.formTitle}</h2>
+          <p className="mt-1 text-sm text-muted-foreground">{t.responseTime}</p>
           <fieldset disabled={sending || sent} className="mt-6 grid gap-4 disabled:opacity-70">
             <Field
-              label="Imię i nazwisko"
+              label={t.fields.name[0]}
               name="name"
-              placeholder="np. Anna Kowalska"
+              placeholder={t.fields.name[1]}
               required
               error={errors.name}
             />
             <Field
-              label="E-mail"
+              label={t.fields.email[0]}
               name="email"
               type="email"
-              placeholder="anna@szkola.edu.pl"
+              placeholder={t.fields.email[1]}
               required
               error={errors.email}
             />
             <Field
-              label="Instytucja / Organizacja"
+              label={t.fields.org[0]}
               name="org"
-              placeholder="np. SP nr 5 w Łodzi"
+              placeholder={t.fields.org[1]}
               required
               error={errors.org}
             />
@@ -232,18 +223,17 @@ export function Contact() {
                 htmlFor="topic"
                 className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ink-soft"
               >
-                Interesuje mnie
+                {t.fields.topic}
               </label>
               <select
                 id="topic"
                 name="topic"
-                defaultValue="Warsztat dla uczniów (szkoła ponadpodstawowa)"
+                defaultValue={t.options[0]}
                 className="w-full rounded-xl border border-border bg-warm px-4 py-3 text-sm outline-none transition focus:border-clay focus:bg-card focus-visible:ring-2 focus-visible:ring-ring/40"
               >
-                <option>Warsztat dla uczniów (szkoła ponadpodstawowa)</option>
-                <option>Warsztat dla uczniów (szkoła podstawowa kl. 7–8)</option>
-                <option>Szkolenie dla nauczycieli / pedagogów</option>
-                <option>Inne - opisz poniżej</option>
+                {t.options.map((option) => (
+                  <option key={option}>{option}</option>
+                ))}
               </select>
             </div>
             <div>
@@ -251,19 +241,19 @@ export function Contact() {
                 htmlFor="message"
                 className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ink-soft"
               >
-                Wiadomość (opcjonalnie)
+                {t.fields.message[0]}
               </label>
               <textarea
                 id="message"
                 name="message"
                 rows={4}
                 className="w-full resize-none rounded-xl border border-border bg-warm px-4 py-3 text-sm outline-none transition focus:border-clay focus:bg-card focus-visible:ring-2 focus-visible:ring-ring/40"
-                placeholder="Powiedz nam coś więcej…"
+                placeholder={t.fields.message[1]}
               />
               {errors.message && <p className="mt-1 text-xs text-destructive">{errors.message}</p>}
             </div>
             <div aria-hidden className="absolute left-[-9999px] top-auto h-0 w-0 overflow-hidden">
-              <label htmlFor="website">Strona www</label>
+              <label htmlFor="website">{t.fields.website}</label>
               <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
             </div>
             <button
@@ -273,23 +263,19 @@ export function Contact() {
             >
               {sent ? (
                 <>
-                  <Check className="h-4 w-4" /> Wysłano!
+                  <Check className="h-4 w-4" /> {t.buttons.sent}
                 </>
               ) : sending ? (
                 <>
-                  <Loader2 className="h-4 w-4 animate-spin" /> Wysyłam…
+                  <Loader2 className="h-4 w-4 animate-spin" /> {t.buttons.sending}
                 </>
               ) : (
                 <>
-                  Wyślij zgłoszenie <ArrowRight className="h-4 w-4" />
+                  {t.buttons.submit} <ArrowRight className="h-4 w-4" />
                 </>
               )}
             </button>
-            <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-              Wysyłając formularz wyrażasz zgodę na przetwarzanie podanych danych (imię, e-mail,
-              instytucja) wyłącznie w celu odpowiedzi na zgłoszenie. Dane nie są udostępniane
-              stronom trzecim.
-            </p>
+            <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{t.privacy}</p>
           </fieldset>
         </form>
       </div>

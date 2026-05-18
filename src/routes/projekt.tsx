@@ -1,27 +1,8 @@
-﻿import { createFileRoute } from "@tanstack/react-router";
-import { SiteShell } from "@/components/site/shell";
-import { Projekt } from "@/components/site/projekt";
+import { createFileRoute } from "@tanstack/react-router";
+import { PublicSectionPage } from "@/components/site/public-page";
+import { getPublicHead } from "@/lib/public-content";
 
 export const Route = createFileRoute("/projekt")({
-  head: () => ({
-    meta: [
-      { title: "Projekt - Rodzynek.pl" },
-      {
-        name: "description",
-        content:
-          "Cel Rodzynek.pl: reintegracja grup rówieśniczych, wsparcie rówieśnicze i warsztaty tworzone z młodzieżą.",
-      },
-      { property: "og:title", content: "Projekt - Rodzynek.pl" },
-      {
-        property: "og:description",
-        content:
-          "Zobacz, jak Rodzynek.pl buduje system wsparcia rówieśniczego i przestrzeń do rozmowy bez presji.",
-      },
-    ],
-  }),
-  component: () => (
-    <SiteShell>
-      <Projekt />
-    </SiteShell>
-  ),
+  head: () => getPublicHead("pl", "project"),
+  component: () => <PublicSectionPage locale="pl" page="project" />,
 });

@@ -1,8 +1,15 @@
-﻿import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Menu, X } from "lucide-react";
+import {
+  getHomeSectionHref,
+  getPublicPath,
+  publicContent,
+  type Locale,
+  type PublicRouteKey,
+} from "@/lib/public-content";
 
-export function useReveal() {
+function useReveal() {
   useEffect(() => {
     const io = new IntersectionObserver(
       (entries) =>
@@ -19,15 +26,30 @@ export function useReveal() {
   }, []);
 }
 
-const NAV_LINKS = [
-  { href: "/#o-nas", label: "O nas" },
-  { href: "/#warsztaty", label: "Warsztaty" },
-  { href: "/#projekt", label: "Projekt" },
-  { href: "/#zespol", label: "Zespół" },
-] as const;
+function getNavLinks(locale: Locale) {
+  const t = publicContent[locale].site.nav;
+  return [
+    { href: getHomeSectionHref(locale, "about"), label: t.about },
+    { href: getHomeSectionHref(locale, "workshops"), label: t.workshops },
+    { href: getHomeSectionHref(locale, "project"), label: t.project },
+    { href: getHomeSectionHref(locale, "team"), label: t.team },
+  ] as const;
+}
 
-function Nav({ scrolled }: { scrolled: boolean }) {
+function Nav({
+  scrolled,
+  locale,
+  page,
+}: {
+  scrolled: boolean;
+  locale: Locale;
+  page: PublicRouteKey;
+}) {
   const [open, setOpen] = useState(false);
+  const t = publicContent[locale].site;
+  const navLinks = getNavLinks(locale);
+  const alternateLocale: Locale = locale === "pl" ? "en" : "pl";
+  const alternateHref = getPublicPath(alternateLocale, page);
 
   return (
     <header
@@ -36,11 +58,15 @@ function Nav({ scrolled }: { scrolled: boolean }) {
       }`}
     >
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3 md:px-10">
-        <Link to="/" aria-label="Rodzynek.pl - strona główna" className="flex items-center gap-2">
+        <a
+          href={getPublicPath(locale, "home")}
+          aria-label={t.homeAria}
+          className="flex items-center gap-2"
+        >
           <img src="/logo-icon.png" alt="Rodzynek.pl" className="h-10 w-auto" />
-        </Link>
+        </a>
         <ul className="hidden items-center gap-7 md:flex">
-          {NAV_LINKS.map((l) => (
+          {navLinks.map((l) => (
             <li key={l.href}>
               <a
                 href={l.href}
@@ -52,15 +78,22 @@ function Nav({ scrolled }: { scrolled: boolean }) {
           ))}
         </ul>
         <div className="flex items-center gap-2">
+          <a
+            href={alternateHref}
+            aria-label={t.languageAria}
+            className="hidden rounded-full border border-border bg-warm px-3.5 py-2 text-xs font-bold uppercase tracking-[0.12em] text-ink-soft transition hover:border-clay hover:text-clay md:inline-flex"
+          >
+            {t.languageLabel}
+          </a>
           <Link
-            href="/#kontakt"
+            href={getHomeSectionHref(locale, "contact")}
             className="hidden md:inline-flex items-center gap-1.5 rounded-full bg-clay px-4 py-2 text-sm font-semibold text-primary-foreground shadow-soft transition hover:opacity-90"
           >
-            Zaproś nas <ArrowRight className="h-4 w-4" />
+            {t.invite} <ArrowRight className="h-4 w-4" />
           </Link>
           <button
             type="button"
-            aria-label={open ? "Zamknij menu" : "Otwórz menu"}
+            aria-label={open ? t.closeMenu : t.openMenu}
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
             className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-warm text-ink md:hidden"
@@ -72,7 +105,7 @@ function Nav({ scrolled }: { scrolled: boolean }) {
       {open && (
         <div className="border-t border-border bg-warm/95 backdrop-blur-xl md:hidden">
           <ul className="mx-auto flex max-w-7xl flex-col gap-1 px-6 py-4">
-            {NAV_LINKS.map((l) => (
+            {navLinks.map((l) => (
               <li key={l.href}>
                 <a
                   href={l.href}
@@ -83,13 +116,22 @@ function Nav({ scrolled }: { scrolled: boolean }) {
                 </a>
               </li>
             ))}
+            <li>
+              <a
+                href={alternateHref}
+                onClick={() => setOpen(false)}
+                className="block rounded-xl px-4 py-3 text-base font-medium text-ink-soft transition hover:bg-clay-soft/60 hover:text-clay"
+              >
+                {t.languageLabel}
+              </a>
+            </li>
             <li className="mt-2">
               <Link
-                href="/#kontakt"
+                href={getHomeSectionHref(locale, "contact")}
                 onClick={() => setOpen(false)}
                 className="flex items-center justify-center gap-2 rounded-full bg-clay px-5 py-3 text-sm font-semibold text-primary-foreground"
               >
-                Zaproś nas <ArrowRight className="h-4 w-4" />
+                {t.invite} <ArrowRight className="h-4 w-4" />
               </Link>
             </li>
           </ul>
@@ -99,15 +141,18 @@ function Nav({ scrolled }: { scrolled: boolean }) {
   );
 }
 
-function Footer() {
+function Footer({ locale }: { locale: Locale }) {
+  const t = publicContent[locale].site;
+  const navLinks = getNavLinks(locale);
+
   return (
     <footer className="bg-ink text-warm/65">
       <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-5 px-6 py-10 text-center md:flex-row md:px-10 md:text-left">
-        <Link to="/" className="flex items-center gap-3">
+        <a href={getPublicPath(locale, "home")} className="flex items-center gap-3">
           <img src="/logo-full.png" alt="Rodzynek.pl" className="h-12 w-auto rounded-lg" />
-        </Link>
+        </a>
         <ul className="flex flex-wrap items-center justify-center gap-6 text-sm">
-          {NAV_LINKS.map((l) => (
+          {navLinks.map((l) => (
             <li key={l.href}>
               <a href={l.href} className="transition hover:text-warm">
                 {l.label}
@@ -115,21 +160,31 @@ function Footer() {
             </li>
           ))}
           <li>
-            <a href="/#kontakt" className="transition hover:text-warm">
-              Kontakt
+            <a href={getHomeSectionHref(locale, "contact")} className="transition hover:text-warm">
+              {t.contact}
             </a>
           </li>
         </ul>
-        <span className="text-xs text-warm/45">© 2025 Rodzynek.pl · CLARA / Yourope · UŁ</span>
-        <span className="text-xs text-warm/45">Made with 🤎 by jacobs ®</span>
+        <span className="text-xs text-warm/45">{t.copyright}</span>
+        <span className="text-xs text-warm/45">{t.madeBy}</span>
       </div>
     </footer>
   );
 }
 
-export function SiteShell({ children }: { children: React.ReactNode }) {
+export function SiteShell({
+  children,
+  locale = "pl",
+  page = "home",
+}: {
+  children: React.ReactNode;
+  locale?: Locale;
+  page?: PublicRouteKey;
+}) {
   useReveal();
   const [scrolled, setScrolled] = useState(false);
+  const t = publicContent[locale].site;
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
     onScroll();
@@ -143,11 +198,11 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
         href="#main"
         className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-clay focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-primary-foreground"
       >
-        Przejdź do treści
+        {t.skipLink}
       </a>
-      <Nav scrolled={scrolled} />
+      <Nav scrolled={scrolled} locale={locale} page={page} />
       <main id="main">{children}</main>
-      <Footer />
+      <Footer locale={locale} />
     </div>
   );
 }

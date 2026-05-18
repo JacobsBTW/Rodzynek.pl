@@ -1,9 +1,14 @@
-export function renderErrorPage(): string {
+import { getPublicPath, publicContent, type Locale } from "./public-content";
+
+export function renderErrorPage(locale: Locale = "pl"): string {
+  const t = publicContent[locale].ui;
+  const homeHref = getPublicPath(locale, "home");
+
   return `<!doctype html>
-<html lang="pl">
+<html lang="${locale}">
   <head>
     <meta charset="utf-8" />
-    <title>Ta strona się nie załadowała</title>
+    <title>${t.errorTitle}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
       body { font: 15px/1.5 system-ui, -apple-system, sans-serif; background: #fafafa; color: #111; display: grid; place-items: center; min-height: 100vh; margin: 0; padding: 1.5rem; }
@@ -18,11 +23,11 @@ export function renderErrorPage(): string {
   </head>
   <body>
     <div class="card">
-      <h1>Ta strona się nie załadowała</h1>
-      <p>Coś poszło nie tak po naszej stronie. Możesz odświeżyć widok albo wrócić na stronę główną.</p>
+      <h1>${t.errorTitle}</h1>
+      <p>${t.errorBody}</p>
       <div class="actions">
-        <button class="primary" onclick="location.reload()">Spróbuj ponownie</button>
-        <a class="secondary" href="/">Wróć na stronę główną</a>
+        <button class="primary" onclick="location.reload()">${t.retry}</button>
+        <a class="secondary" href="${homeHref}">${t.home}</a>
       </div>
     </div>
   </body>
