@@ -9,13 +9,13 @@ export const Route = createFileRoute("/o-nas")({
       {
         name: "description",
         content:
-          "Studencka inicjatywa z UŁ. Warsztaty rówieśnicze o presji rówieśniczej w ramach projektu CLARA i sieci Yourope.",
+          "Poznaj Rodzynek.pl - młodych ludzi, którzy tworzą wsparcie rówieśnicze i reagują na presję oraz wykluczenie.",
       },
       { property: "og:title", content: "O nas - Rodzynek.pl" },
       {
         property: "og:description",
         content:
-          "Kim jesteśmy i dlaczego wierzymy, że rozmowa rówieśnika z rówieśnikiem zmienia więcej niż wykład.",
+          "Kim jesteśmy, dlaczego powstał Rodzynek.pl i czemu wierzymy w rozmowę zamiast pouczania.",
       },
     ],
   }),
